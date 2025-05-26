@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vote Your Nightmare</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: black url('https://i.gifer.com/ZZ5H.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: red;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-shadow: 0 0 10px red;
+      margin-top: 40px;
+    }
+
+    .question {
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.7);
+      border: 2px solid red;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+
+    button {
+      font-family: inherit;
+      background: red;
+      color: black;
+      padding: 15px 30px;
+      border: none;
+      font-size: 1rem;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 10px red;
+      transition: all 0.2s ease-in-out;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: darkred;
+    }
+
+    .vhs {
+      color: red;
+      text-shadow: 0 0 5px red, 0 0 20px crimson;
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; }
+      5% { opacity: 0.5; }
+      10% { opacity: 1; }
+      15% { opacity: 0.3; }
+      20% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="vhs">Vote Your Nightmare</h1>
+
+  <form id="voteForm">
+    <div class="question">
+      <p>1. Choose your concept:</p>
+      <label><input type="radio" name="concept" value="horror" required> Horror</label>
+      <label><input type="radio" name="concept" value="retro"> Retro</label>
+      <label><input type="radio" name="concept" value="fantasy"> Fantasy</label>
+    </div>
+
+    <div class="question">
+      <p>2. Choose TikTok challenge:</p>
+      <label><input type="radio" name="challenge" value="Version H" required> Version H</label>
+      <label><input type="radio" name="challenge" value="Version S"> Version S</label>
+    </div>
+
+    <div class="question">
+      <p>3. Choose a mood:</p>
+      <label><input type="radio" name="mood" value="scary" required> Scary</label>
+      <label><input type="radio" name="mood" value="kpop"> Kpop</label>
+      <label><input type="radio" name="mood" value="high-fashion"> High Fashion</label>
+    </div>
+
+    <button type="submit">SUBMIT</button>
+  </form>
+
+  <div id="thankYouMessage" style="display: none; margin-top: 30px;" class="vhs">
+    <h2>🎉 Thanks for voting, Stranger!</h2>
+    <p>Your nightmare has been recorded in the Upside Down.</p>
+  </div>
+
+  <script>
+    document.getElementById('voteForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const concept = document.querySelector('input[name="concept"]:checked')?.value;
+      const challenge = document.querySelector('input[name="challenge"]:checked')?.value;
+      const mood = document.querySelector('input[name="mood"]:checked')?.value;
+
+      const formData = new URLSearchParams();
+      formData.append("concept", concept);
+      formData.append("challenge", challenge);
+      formData.append("mood", mood);
+
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbwrWgQ7wzftj21CYGtPPoigYyIZI2ip927SpXbXlMrqvG8-8HpEtBOwHjANwQkLCl5e/exec';
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const resultText = await res.text();
+        console.log("Response text:", resultText);
+
+        // Показываем сообщение, скрываем форму
+        document.getElementById('voteForm').style.display = 'none';
+        document.getElementById('thankYouMessage').style.display = 'block';
+
+      } catch (err) {
+        alert("Error submitting vote. Try again.");
+        console.error("Fetch error:", err);
+      }
+    });
+  </script>
+</body>
+</html>
